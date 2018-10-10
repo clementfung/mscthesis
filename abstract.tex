@@ -1,0 +1,57 @@
+\chapter{Abstract}
+
+The problem of machine learning (ML) over distributed data sources
+arises in a variety of domains. Unfortunately, today's distributed ML
+systems use an unsophisticated threat model: data sources must trust a
+central ML process.
+
+We propose a \emph{brokered learning} abstraction that provides data
+sources with provable privacy guarantees while allowing them to
+contribute data towards a globally-learned model in an untrusted
+setting. We realize this abstraction by building on the state of the
+art in multi-party distributed ML and differential privacy methods to
+construct \emph{TorMentor}, a system that is deployed as a hidden
+service over an anonymous communication protocol.
+
+We define a new threat model by characterizing, developing and
+evaluating new attacks in the brokered learning setting, along with
+effective defenses for these attacks. We show that TorMentor
+effectively protects data sources against known ML attacks while
+providing them with a tunable trade-off between model accuracy and
+privacy.
+
+We evaluate TorMentor with local and geo-distributed deployments on
+Azure. In an experiment with 200 clients and 14 MB of data per
+client our prototype trained a logistic regression model using
+stochastic gradient descent in 65s.
+
+% , making this abstraction a practical reality.
+
+%% We translate known ML attacks into our setting, including model
+%% poisoning and model inversion. And, we introduce existing and novel
+%% defenses. 
+
+
+%% This means that the central process knows the
+%% identities of the data sources and
+%% must transfer their
+%% raw, and possibly private, data to a central location.
+
+
+
+%
+%% TorMentor uses a realistic threat model: the curator who wants to
+%% train the model may be malicious towards clients who contribute
+%% data, clients do not trust each other nor the curator, and do not
+%% trust TorMentor with their raw data or their identity.
+%% TorMentor resolves the challenges around protecting both curators and
+%% clients by using differential privacy, work validation, and proof of
+%% work techniques. 
+
+%% The core contribution of our system is the
+%% implementation and validation of three practical strategies for
+%% collaborative anonymous machine learning: (1) high security and
+%% privacy for a fully anonymous and open client base, (2) security and
+%% privacy for an anonymous bounded client base, and (3) basic privacy
+%% for a known and trusted client base.
+

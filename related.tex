@@ -1,0 +1,42 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Related work}
+\label{sec:related}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clement{This section will be gone. It includes content that I haven't
+added to the background/decided to delete yet.}
+
+\textbf{Prio.}
+Prio (Private, Robust and Scalable Computation of Aggregate
+Statistics) \cite{Corrigan-Gibbs:2017} is a system that makes weaker 
+assumptions about the trust between clients and curators. Prio assumes
+that clients or curators can be malicious, and builds effective
+defenses against these cases. As long as one curator is honest, Prio is
+able to compute aggregate values of the private values of several
+clients. Prio has functionality that supports machine learning, but it
+fundamentally relies on using private sums to train models, and
+computing the solution to a large linear system. This is only effective
+for settings in which the loss function can be represented as such:
+when the function is convex and differentiable, but breaks down for
+techniques that fail to hold this property. Gradient descent is an
+alternative solution for solving systems in this setting and
+generalizes to functions that cannot be solved as a system of linear
+equations. In order to properly handle a wide variety of machine
+learning workloads, the ability to perform gradient descent is an
+essential component. 
+%
+\ivan{Wait, so the only diff. from Prio is that we do this for
+  gradient descent? This seems a bit narrow. I hope there are other
+  differences..}
+
+\clement{I have to think of the best way to flow into and incorporate
+this. It's a bit tough because Prio doesn't introduce any primitives
+that we actually incorporate or build on in our system. The main thing
+is that Prio has a similar trust model to ours, but has much less
+utility. It only computes sums. }
+
+\ivan{One strategy is to expand the intro with more general-purpose
+  cites, such as Prio. Think of the middle portion of the intro as
+  your related work section that provides general background. Then,
+  the background section can get into the super detailed pieces that
+  are essential to (understanding/contextualizing) this paper.}

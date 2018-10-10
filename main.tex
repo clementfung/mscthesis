@@ -1,0 +1,143 @@
+
+%-----------------------------------------------------------------------------
+%
+%               Template for sigplanconf LaTeX Class
+%
+% Name:         sigplanconf-template.tex
+%
+% Purpose:      A template for sigplanconf.cls, which is a LaTeX 2e class
+%               file for SIGPLAN conference proceedings.
+%
+% Guide:        Refer to "Author's Guide to the ACM SIGPLAN Class,"
+%               sigplanconf-guide.pdf
+%
+% Author:       Paul C. Anagnostopoulos
+%               Windfall Software
+%               978 371-2316
+%               paul@windfall.com
+%
+% Created:      15 February 2005
+%
+%-----------------------------------------------------------------------------
+
+
+\documentclass[USenglish,preprint,oneside,twocolumn]{article}
+
+\input{annotations}
+
+% The following \documentclass options may be useful:
+
+% preprint       Remove this option only once the paper is in final form.
+%  9pt           Set paper in  9-point type (instead of default 10-point)
+% 11pt           Set paper in 11-point type (instead of default 10-point).
+% numbers        Produce numeric citations with natbib (instead of default author/year).
+% authorversion  Prepare an author version, with appropriate copyright-space text.
+
+\usepackage[big]{dgruyter_NEW}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[]{algorithm2e}
+\usepackage[page]{appendix}
+
+\newcommand{\cL}{{\cal L}}
+
+\begin{document}
+
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+%% \conferenceinfo{CONF'yy}{Month d--d, 20yy, City, ST, Country}
+%% \copyrightyear{20yy}
+%% \copyrightdata{978-1-nnnn-nnnn-n/yy/mm}\reprintprice{\$15.00}
+%% \copyrightdoi{nnnnnnn.nnnnnnn}
+
+% For compatibility with auto-generated ACM eRights management
+% instructions, the following alternate commands are also supported.
+%\CopyrightYear{2016}
+%\conferenceinfo{CONF'yy,}{Month d--d, 20yy, City, ST, Country}
+%\isbn{978-1-nnnn-nnnn-n/yy/mm}\acmPrice{\$15.00}
+%\doi{http://dx.doi.org/10.1145/nnnnnnn.nnnnnnn}
+
+% Uncomment the publication rights used.
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}  % default
+%\setcopyright{rightsretained}
+
+\begin{abstract}
+{Distributed machine learning (ML) systems today use an unsophisticated
+threat model: data sources must trust a central ML process. We propose
+a \emph{brokered learning} abstraction that allows data sources to
+contribute towards a globally-shared model with provable privacy
+guarantees in an untrusted setting. We realize this abstraction by
+building on federated learning, the state of the art in multi-party ML,
+to construct \emph{TorMentor}: an anonymous hidden service that
+supports private multi-party ML. \\
+We define a new threat model by characterizing, developing and
+evaluating new attacks in the brokered learning setting, along with
+new defenses for these attacks. We show that TorMentor effectively
+protects data providers against known ML attacks while providing them
+with a tunable trade-off between model accuracy and privacy.
+We evaluate TorMentor with local and geo-distributed deployments on
+Azure/Tor. In an experiment with 200 clients and 14 MB of data per
+client, our prototype trained a logistic regression model using
+stochastic gradient descent in 65s.}
+\end{abstract}
+
+\journalname{Proceedings on Privacy Enhancing Technologies 2019}
+\DOI{Editor to enter DOI}
+
+\startpage{1}
+\received{..}
+\revised{..}
+\accepted{..}
+
+\journalyear{..}
+\journalvolume{..}
+\journalissue{..}
+
+\author*[1]{First Author}
+\author[2]{Second Author}
+\author[3]{Third Author}
+
+\affil[1]{Affil, E-mail: email@email.edu}
+\affil[2]{Affil, E-mail: email@email.edu}
+\affil[3]{Affil, E-mail: email@email.edu}
+
+%\title{Anonymous and Differentially-Private Machine Learning}
+%\title{Anonymous and Privacy-Preserving Distributed Machine Learning}
+%\title{Privacy-Preserving Distributed Machine Learning in an Untrusted Setting}
+%\title{Learning Blind: Private Multi-Party Machine Learning in an Untrusted Setting}
+\title{\huge Dancing in the Dark: Private Multi-Party Machine Learning
+in an Untrusted Setting}
+%\subtitle{}
+
+\runningtitle{Private Multi-Party Machine Learning in an Untrusted
+Setting}
+
+\maketitle
+
+%% \keywords
+%% keyword1, keyword2
+
+\input{intro}
+\input{background}
+\input{setting}
+\input{attacks}
+\input{design}
+\input{implementation}
+\input{eval}
+\input{discussion}
+\input{conc}
+\input{appendix}
+
+%% \acks
+%% Acknowledgments, if needed.
+
+\bibliographystyle{abbrvnat}
+\bibliography{main}
+
+\end{document}

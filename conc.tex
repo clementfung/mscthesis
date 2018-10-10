@@ -1,0 +1,45 @@
+%!TEX root = main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+\label{sec:conc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We introduced a novel multi-party machine learning setting called
+\textit{brokered learning}, in which data providers and model curators
+do not trust one another and inter-operate through a third party
+brokering service. All parties define their privacy requirements, and
+the broker orchestrates the distributed machine learning process
+while satisfying these requirements.
+%% Data privacy and security are of growing importance, and 
+%% \textit{brokered learning} is a requirement if full privacy and
+%% anonymity are required. 
+To demonstrate that this proposal is practical, we developed
+TorMentor, a system for anonymous, privacy-preserving ML in the
+brokered learning setting. TorMentor uses differentially private
+model training methods to provide the strongest known defenses against
+attacks in this setting~\cite{Huang:2011} and to support heterogeneous
+privacy levels for data owners. We also developed and evaluated novel
+ML attacks and defenses for the brokered learning setting.
+
+Using a Tor hidden service as the broker to aggregate and validate client
+gradient updates, TorMentor collaboratively trains a model across 200
+geo-distributed clients, without ever directly accessing the raw data
+or de-anonymizing any of the users. We define a realistic
+threat model for brokered learning and show that in contrast to existing
+solutions for distributed ML, such as Gaia~\cite{Hsieh:2017} and
+federated learning~\cite{McMahan:2017}, TorMentor's defenses
+successfully counter recently developed poisoning and inversion attacks
+on ML. 
+
+%% Existing solutions for distributed ML such as Gaia~\cite{Hsieh:2017}
+%% and federated learning~\cite{McMahan:2017} are susceptible to
+%% poisoning and inversion attacks. Clients must trust that an attack
+%% will not be mounted by the other clients or the curator.  TorMentor
+%% uses differential privacy training methods, which provide the
+%% strongest known defenses against attacks in this
+%% setting~\cite{Huang:2011}.
+
+%% A focus on data providers and their privacy is emerging as a theme in
+%% distributed machine learning. This work leverages security solutions
+%% and a user-centric model to define new, exciting primitives for
+%% collaborative ML.

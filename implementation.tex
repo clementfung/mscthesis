@@ -1,0 +1,21 @@
+%!TEX root = main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{TorMentor Implementation}
+\label{sec:impl}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We implemented a TorMentor prototype in 600 LOC in Python 2.7 and
+1,500 LOC in Go 1.8. All the communication primitives are developed in
+Go, while the vector computation and ML are in Python. We implement
+differentially-private SGD~\cite{Song:2013} in Numpy 1.12. For our
+noise function, we use a multivariate isotropic Laplace distribution.
+As a performance operation, we draw random samples from this
+distribution prior to training by using \emph{emcee}, an MIT licensed
+Monte Carlo (MCMC) ensemble sampler~\cite{mcmc:2013}.
+
+In our evaluation we deploy the TorMentor curator and clients on
+Azure by using bash scripts consisting of 371 LOC. These bootstrap VMs
+with a TorMentor installation, launch clients, and orchestrate experiments.
+
+%%  sets of parameterized
+%% clients on these VMs.

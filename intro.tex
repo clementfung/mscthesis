@@ -1,0 +1,127 @@
+%!TEX root = main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}
+\label{sec:intro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Machine learning (ML) models rely on large volumes of diverse,
+representative data for training and validation. However, to build
+multi-party models from user-generated data, users must provide and
+share their potentially sensitive information. Existing 
+solutions~\cite{Low:2012, Li:2014}, even when incorporating
+privacy-preserving mechanisms~\cite{Abadi:2016}, assume
+the presence of a trusted central entity that all users share
+their data and/or model updates with. For example, the Gboard
+service~\cite{Gboard:2017} uses sensitive data from Android keyboard
+inputs to generate better text suggestions; users who wish to train
+an accurate Gboard suggestion model must send their mobile keyboard
+data to Google.
+
+Federated learning~\cite{McMahan:2017} keeps data on the client device
+and trains ML models by only transferring model parameters to a trusted
+central coordinator. In the quest for training the optimal ML model as
+quickly as possible, the coordinator is not incentivized to provide
+privacy for data providers: data is collected and is only kept on the
+device as a performance optimization~\cite{McMahan:2017}.  
+
+Furthermore, federated learning is not private or secure against
+adversaries, who can pose as honest data providers or an honest
+coordinator and who use auxiliary information from the learning process to
+infer information about the training data of other 
+users~\cite{Hitaj:2017}, despite data never being
+explicitly shared. One may consider obfuscating data labels before
+learning, but this is also insufficient to guarantee 
+privacy~\cite{Calandrino:2011}. General privacy-preserving computation
+models exist, but they rely on substantial amounts of additional
+infrastructure. These include homomorphically encrypted secure
+aggregation~\cite{Bonawitz:2017}, secure multi-party 
+computation~\cite{Mohassel:2017}, or trusted SGX
+infrastructure~\cite{Ohrimenko:2016}, all of which are infeasible for
+individuals and small organizations to deploy.
+
+Today there is no accessible solution to collaborative multi-party
+machine learning that maintains privacy and anonymity in an untrusted
+setting. In developing this solution, we propose a novel setting
+called \textit{brokered learning} that decouples the role of
+coordination from the role of defining the learning process. We
+introduce a short-lived, honest-but-curious \emph{broker} that mediates
+interactions between a \emph{curator}, who defines the shared learning
+task, and \emph{clients}, who provide training data. In decoupling
+these roles, curators are no longer able to directly link clients to
+their model updates, and cannot manipulate the learning
+process.
+
+Clients and curators never directly communicate: they are protected
+from each other by a broker that is only used to coordinate the
+learning task. The broker is administered by an honest-but-curious
+neutral party, detects and rejects anomalous behavior, and terminates
+when the learning objective is met. Our system design supports privacy
+and anonymity by building on accessible public infrastructure to
+minimize the cost of setting up and maintaining a broker.
+
+We realize the brokered learning setting by designing, implementing,
+and evaluating \emph{TorMentor}, a system which creates \emph{brokers}
+to interface with the curator and the clients
+in a brokered learning process. TorMentor is
+implemented as a hidden Tor service, but can use any general-purpose
+anonymous communication service to safeguard the identities of
+curators and clients. % between themselves and from each other.
+
+% TorMentor is functionally analogous to
+% traditional distributed parameter servers in the federated learning 
+% model~\cite{McMahan:2017}, but is unique in that it decouples the
+% curator from the broker, supporting settings in which the curator is
+% untrusted.
+
+Although the model curator is removed from the learning process, a
+myriad of other attacks are still possible. We adapt known ML attacks
+to brokered learning and build on several state of the art techniques
+to thwart a variety of these attacks when they are mounted by clients,
+brokers and curators. Client-side differential
+privacy~\cite{Dwork:2014, Geyer:2017} protects users from inversion
+attacks~\cite{Fredrikson:2014, Fredrikson:2015}, reject on negative
+influence (RONI)~\cite{Barreno:2010} and monitored client
+statistics~\cite{Mozaffari-Kermani:2015} prevent model poisoning
+attacks~\cite{Biggio:2012, Huang:2011} and proof of
+work~\cite{Back:2002} mitigates sybil attacks~\cite{Douceur:2002}.
+
+Our evaluation of TorMentor demonstrates that these defenses protect
+clients and curators from each other. For example, in one experiment
+with 50\% malicious poisoning clients, a TorMentor broker was able to
+convergence to an optimum after mitigating and recovering from 
+malicious behavior through our novel adaptive proof of work mechanism.
+We also evaluated the performance of our prototype in a geo-distributed
+setting: across 200 geo-distributed clients with 14 MB of data
+per client, the training process in TorMentor takes 67s. By
+comparison the training on a similar federated learning system without
+Tor would take 13s. The observed overhead of TorMentor ranges from
+5-10x, and depending on the level of privacy and security required,
+TorMentor's modular design allows users to further tune the system to
+meet their expected needs on the security-performance trade-off.
+
+In summary, we make four contributions:
+\begin{itemize}[label=$\star$]
+ \item We develop a \textit{brokered learning} setting for
+    privacy-preserving anonymous multi-party machine learning in an
+    untrusted setting. We define the responsibilities, interactions,
+    and threat models for the three actors in brokered learning:
+    curators, clients, and the broker.
+
+ \item We realize the brokered learning model in the design and
+    implementation of \textit{TorMentor} and evaluate TorMentor's
+    training and classification performance on a public dataset.
+
+ \item We translate known attacks on centralized ML 
+    (poisoning~\cite{Huang:2011, Nelson:2008} and 
+    inversion~\cite{Fredrikson:2014, Fredrikson:2015}) and known
+    defenses in centralized ML (RONI~\cite{Barreno:2010}, differential
+    privacy~\cite{Dwork:2014}) to the brokered learning setting. We
+    evaluate the privacy and utility implications of these attacks and
+    defenses.
+
+ \item We design, implement, and evaluate three new defense mechanisms
+    for the brokered learning setting: distributed RONI,
+    adaptive proof of work, and thresholding the number of clients.
+
+\end{itemize}
+

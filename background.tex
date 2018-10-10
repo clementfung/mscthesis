@@ -1,0 +1,177 @@
+%!TEX root = main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Background}
+\label{sec:background}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent \textbf{Machine Learning (ML).} 
+%
+Many ML problems can be represented as the minimization of a loss
+function in a large Euclidean space. For example, a binary
+classification task in ML involves using features from data examples to
+predict discrete binary outputs; a higher loss results in more
+prediction errors. Given a set of training data and a proposed model, ML
+algorithms \emph{train}, or iteratively find an optimal set of
+parameters, for the given training set. One approach is to use
+stochastic gradient descent (SGD)~\cite{Bottou:2010}, an iterative
+algorithm which samples a batch of training examples of size $b$, uses
+them to compute gradients on the parameters of the current model, and
+takes gradient steps in the corresponding gradient direction. The
+algorithm then updates the model parameters and another iteration is
+performed (Appendix A contains all background formalisms).
+
+Our work uses SGD as the training method. SGD is a
+general learning algorithm that is used to train a variety
+of models, including deep learning~\cite{Song:2013}.\\
+
+\noindent \textbf{Distributed multi-party ML.}
+%
+To support larger models and datasets, ML training has been
+parallelized using a parameter server architecture~\cite{Li:2014}: the
+global model parameters are partitioned and stored on a parameter
+server. At each iteration, client machines pull the 
+parameters, compute and apply one or more iterations, and push their
+updates back to the server. This can be done
+with a synchronous or asynchronous protocol~\cite{Hsieh:2017,
+Recht:2011}, both of which are supported in our work.
+
+%% Through the parameter server architecture, computation is highly
+%% parallelized and the storage of data is partitioned, enabling training
+%% at a large scale. 
+% The quality of the model trained in this distributed fashion matches
+% that of a centralized approach. However, with distributed
+% training, consistency of the global model parameters $w_{g,t}$
+% becomes a concern. The bulk synchronous parallel (BSP) and stale
+% synchronous parallel (SSP) algorithms are two approaches to this
+% issue~\cite{Hsieh:2017}. In BSP, client machines hold a lock on model
+% parameters during computation, such that no client machine can compute
+% gradients on a stale copy of a model parameter. In SSP, a bounded
+% amount of staleness is allowed, which increases parallelization but
+% allows for clients to compute gradients on stale versions of
+% $w_{g,t}$. Other work has shown that a lock-free approach to parallel
+% SGD is also feasible if the loss function meets certain strong
+% convexity guarantees~\cite{Recht:2011}.
+% %
+% \ivan{Above details about BSP and SSP lead into nowhere -- why are we
+%   describing these? Which one do we use in TorMentor/does it matter?
+%   i.e., can we just push this as a quick cite in design; do we
+%   \emph{have} to introduce this here in such detail?}
+
+\textit{Federated Learning}~\cite{McMahan:2017}. The partitioning of
+training data enables multi-party machine learning: data is
+distributed across multiple data owners and cannot be shared. Federated
+learning supports this setting through a protocol in which clients send
+gradient updates in a distributed SGD algorithm. These updates are
+collected and averaged by a central server, enabling training over
+partitioned data sources from different owners. \\
+
+\noindent \textbf{Attacks on ML.} 
+%
+%% Anonymity in ML is beneficial for facilitating private ML, but also
+%% creates a new opportunity for attackers.
+Our work operates under a unique and novel set of assumptions when
+performing ML and requires a new threat model. Despite this novel
+setting, the attacks are functionally analogous to state of the art ML
+attacks known today. 
+
+\emph{Poisoning attack.}  In a poisoning attack~\cite{Biggio:2012,
+Mozaffari-Kermani:2015}, an adversary meticulously creates adversarial
+training examples and inserts them into the training data set of a 
+target model. This may be done to degrade the accuracy of the final
+model (a random attack), or to increase/decrease the probability of a
+targeted example being predicted as a target class (a targeted 
+attack)~\cite{Huang:2011}. For example, such an attack could be
+mounted to avoid anomaly detectors~\cite{Rubinstein:2009} or to evade
+email spam filtering~\cite{Nelson:2008}.  
+
+In federated learning, clients possess a disjoint set of the
+total training data; they have full control over this set, and can
+therefore perform poisoning attacks with minimal difficulty.
+
+\emph{Information leakage.}  In an information leakage attack, such as
+model inversion, an adversary attempts to recover training examples
+from a trained model $f(x)$. Given a targeted class $y$, one inversion
+technique involves testing all possible values in a feasible feature
+region, given that some information about the targeted example is
+known. The attack then finds the most probable values of the targeted
+example features~\cite{Fredrikson:2014}.
+
+Another model inversion attack uses prediction confidence scores from
+$f(x)$ when predicting $y$ to perform gradient descent to train a model
+$\hat{f(x)}$ that closely resembles $f(x)$. The victim's features are
+probabilistically determined by using the model in prediction. The
+resulting vector $x$ that comes from this process is one that
+most closely resembles an original victim training 
+example~\cite{Fredrikson:2015}. 
+
+Information leakage attacks have been extended to federated learning:
+instead of querying information from a fully trained model, an
+adversary observes changes in the shared model during the training
+process itself~\cite{Hitaj:2017}. In doing so, the adversary can
+reconstruct training examples that belong to other clients. \\
+
+\noindent \textbf{Defenses for ML.}  
+\emph{A RONI (Reject on Negative Influence)} 
+defense~\cite{Barreno:2010} counters ML poisoning attacks. Given a set
+of untrusted training examples $D_{un}$, this defense trains two
+models, one model using all of the trusted training data $D$, and
+another model using the union dataset $D' = D \cup D_{un}$ which
+includes the untrusted data. If the performance of $D'$ is
+significantly worse than the performance of $D$ on a validation
+dataset, the data $D_{un}$ is flagged as malicious and rejected.
+However, this defense relies on access to the centralized dataset,
+which is infeasible in the federated learning setting.
+
+\emph{Differential privacy}~\cite{Dwork:2014} is a privacy guarantee
+that ensures that, for a given dataset, when used to answer questions
+about a given population, that no adversary can identify individuals
+that are members of the dataset. 
+%
+Differential privacy is user-centric: the violation of a single user's
+privacy is considered a privacy breach. Differential privacy is
+parameterized by $\varepsilon$, which controls the privacy-utility
+trade-off. In the ML context, utility equates to model 
+performance~\cite{Song:2013}. When $\varepsilon$ approaches 0, full
+privacy is ensured, but an inaccurate model is produced. When
+$\varepsilon$ approaches infinity, the optimal model is produced
+without any privacy guarantees.
+
+Differential privacy has been applied to several classes of ML
+algorithms~\cite{Shokri:2015, Bellet:2017} in decentralized settings to
+theoretically guarantee that a client's privacy is not compromised when
+their data is used to train a model. This guarantee extends to both the
+training of the model and to usage of the model for predictions.
+
+Differentially private SGD~\cite{Song:2013, Geyer:2017} is a method
+that applies differential privacy in performing SGD. Before sending
+gradient updates at each iteration, clients perturb their gradient
+values with additive noise, which protects the privacy of the input
+dataset. The choice of batch size impacts the effect of the privacy
+parameter on the model performance. Our work uses differentially
+private SGD to provide the flexible privacy levels against attacks in
+our setting.\\
+
+\noindent \textbf{Anonymous communication systems.}
+Clients are still at privacy risk when sending model updates directly
+to an untrusted broker, so we add an additional layer of indirection in
+our work. Onion routing protocols are a modern method for providing
+anonymity in a distributed P2P setting. When communicating with a
+target node, clients route traffic through a randomly selected set of
+relay nodes in the network, which obfuscates the source and destination
+nodes for each message.
+
+Our work supports the use of any modern implementation for providing
+anonymous communication. We select the Tor 
+network~\cite{Dingledine:2004} as the system in our implementation. \\
+
+\noindent \textbf{Sybil attacks and proof of work.}
+%
+An anonymous system that allows users to join and leave may be attacked
+by sybils~\cite{Douceur:2002}, in which an adversary joins a system
+under multiple colluding aliases. One approach to mitigate sybil
+attacks is to use proof of work~\cite{Back:2002}, in which a user must
+solve a computationally expensive problem (that is easy to verify) to
+contribute to the system. This mechanism provides the guarantee that if
+at least 50\% of the total computation power in the system is
+controlled by honest nodes, the system is resilient to sybils.
+

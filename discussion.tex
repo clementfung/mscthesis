@@ -1,0 +1,81 @@
+%!TEX root = main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Discussion}
+\label{sec:discuss}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{User incentives.}
+%
+Although TorMentor demonstrates that privacy-preserving, untrusted
+collaborative ML is technically feasible, social feasibility remains an
+open question~\cite{Stoica:2017}. That is, are there application
+domains in which data providers are incentivized to contribute to
+models from anonymous curators? And do these incentives depend on the
+type of data, protections offered by a brokered learning setting, or
+something else? Regarding curators, are there cases in which curators
+would be comfortable using a model trained on data from anonymous
+users? We believe that such application domains exist, partly because
+of the widespread usage of federated learning~\cite{Frey:2017} and a
+growing concern over data privacy~\cite{Fan:2015}.\\
+
+\noindent \textbf{Usability of privacy parameters.}
+%
+Allowing clients and curators to define their own privacy parameters
+$\varepsilon$ and $k$ allows for more expressive privacy policies, but
+these parameters, and their implications, are difficult for users to
+understand. Furthermore, privacy budgets, a fundamental element in
+safely implementing and using differential privacy, are complex
+and difficult to understand~\cite{Fan:2015}, as evidenced by Apple's
+recent struggles in implementing such a system~\cite{Apple:2017}. \\
+
+\noindent \textbf{Machine learning and Tor latency.}
+%
+Table~\ref{tab:latency} shows that Tor adds significant latency to the
+machine learning process. On the one hand this (unpredictable) latency
+can make it more difficult to mount an attack; for example, the
+success of the inversion attack partly depends on predictable timing.
+On the other hand, it would be desirable to shorten training time. 
+
+At the moment Tor's latency is paid at each iteration, indicating that
+methods with a lower iteration complexity would perform better. One
+solution to this problem is to locally aggregate
+gradients~\cite{Hsieh:2017, McMahan:2017, Bonawitz:2017} over many
+iterations before sending them to the broker, trading off potential
+model staleness for reduced communication costs. 
+
+Outside of aggregating gradients, several iterative alternatives to SGD
+exist, such as the Newton-Raphson method~\cite{Jennrich:1969} or other
+quasi-Newton methods~\cite{Haelterman:2009}, which involve computing
+the second-order Hessian. This provides convergence with a lower
+iteration complexity, but with a higher computational cost per
+iteration. A differentially-private version of the Newton-Raphson method
+has also been developed~\cite{Ji:2014}.
+
+TorMentor can be extended to generally support iterative ML update
+methods. For models and learning objectives where Newton-Raphson is
+applicable, we expect that Newton-Raphson will complete faster than SGD
+when accounting for the overhead of Tor.\\
+
+\noindent \textbf{Data-free gradient validation.}
+%
+While we demonstrated that our active validation approach defends against
+attacks (e.g., Figure~\ref{fig:poison}), it relies on the curator, who
+defines the learning objective, to provide the ground truth to
+determine if an update is beneficial or not. This approach is not only
+prone to bias but also opens up a new avenue for attack from the
+curator; an adversarial curator could submit a junk validation set to
+attack clients.
+
+It is possible to mitigate these risks by using a data-free
+solution. An open question is whether or not it is possible to achieve
+the same effect without an explicit ground truth. We believe that the
+use of a statistical outlier detection method~\cite{Hodge:2004} to
+detect and remove anomalous gradient updates may bring the best of
+both worlds. This would alleviate the need for and risk of a
+curator-provided validation dataset, and this technique would also eliminate the
+computational overhead of performing explicit validation rounds.
+Another alternative would require the use of robust ML methods that are
+known to handle poisoning attacks~\cite{Barreno:2010, 
+Mozaffari-Kermani:2015}, but these methods are only applicable with
+stronger assumptions about the curator who now must specify a ground
+truth model.

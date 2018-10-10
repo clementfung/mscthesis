@@ -1,0 +1,59 @@
+\section*{Appendix A: SGD and differential privacy}
+
+\noindent \textbf{Stochastic gradient descent (SGD).} In SGD at each iteration
+$t$, the model parameters $w$ are updated as follows:
+
+\begin{align*}
+  w_{t+1} = w_t - \eta_t(\lambda w_t + \frac{1}{b} \sum_{(x_i, y_i)\in
+  B_t} \nabla l(w_t, x_i, y_i)) &&&& (1)
+\end{align*}
+where $\eta_t$ represents a degrading learning rate, $\lambda$ is a
+regularization parameter that prevents over-fitting, $B_t$ represents
+a gradient batch of training data examples $(x_i, y_i)$ of size $b$ and
+$\nabla l$ represents the gradient of the loss function. 
+
+As the number of iterations increases, the effect of each gradient step
+becomes smaller, indicating convergence to a global minimum of the loss
+function. A typical heuristic involves running SGD for a fixed number
+of iterations or halting when the magnitude of the gradient falls below
+a threshold. When this occurs, model training is
+complete and the parameters $w_t$ are returned as the optimal
+model $w^*$.\\
+
+\noindent \textbf{Distributed SGD.}
+In parallelized ML training with a parameter server~\cite{Li:2014},
+the global model parameters $w_g$ are partitioned and stored on a
+parameter server. At each iteration, client machines, which house
+horizontal partitions of the data, pull the global model parameters
+$w_{g,t}$, compute and apply one or more iterations, and push their
+update $\Delta_{i,t}$ back to the parameter server:
+
+\begin{align*}
+  \Delta_{i,t} = - \eta_t(\lambda w_{g,t} &+ \frac{1}{b} \sum_
+  {(x_i, y_i)\in B_t} \nabla l(w_{g,t}, x_i, y_i)) && (2) \\
+  w_{g,t+1} &= w_{g,t} + \sum_i \Delta_{i,t}
+\end{align*}\\
+
+
+\noindent \textbf{Differential privacy and SGD.}
+\textit{$\varepsilon$-differential privacy} states that: given a
+function $f$ and two neighboring datasets $D$ and $D'$ which differ in
+only one example, the probability of the output prediction changes by
+at most a multiplicative factor of $e^\varepsilon$. Formally, a
+mechanism $f : D \to R$ is $\varepsilon$-differentially private for
+any subset of outputs $S \subseteq R$ if
+\[
+Pr[f(D) \in S] \leq e^\varepsilon Pr[f(D') \in S].
+\]
+
+In differentially private SGD~\cite{Song:2013} the SGD update is
+redefined to be the same as in Equation~(2), except with the addition
+of noise:
+\begin{align*}
+  \Delta_{i,t} &= - \eta_t(\lambda w_{g,t} + \sum_{(x_i, y_i)\in B_t}
+  \frac{\nabla l(w_{g,t}, x_i, y_i) + Z_t}{b}) && (3)
+\end{align*}
+where $Z_t$ is a noise vector drawn independently from a distribution:
+\[
+  p(z) \propto e^{(\alpha/2)||z||}
+\]
