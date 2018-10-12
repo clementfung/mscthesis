@@ -2,30 +2,36 @@
 
 \begin{table}[h]
 \begin{tabular}{p{\textwidth}}
- \hline
 % return-val $\leftarrow$ call(args)} 
  %\textbf{API call}                                                 & 
  %\textbf{Description}                                                                 \\
+ \hline \hline
  address $\leftarrow$ \textbf{curate}(mID, maxCli, minCli, validSet) \\
  \hline
  Curate a new model. Curator provides modelID,  
  client count range, validation set. TorMentor returns a hidden
  service address for a newly specified broker. \\
- \hline\hline
- \hline\hline
+ \hline
+\end{tabular} 
+\caption{TorMentor Curator API.\label{tab:CurAPI} }
+\end{table}
+
+\begin{table}[h]
+\begin{tabular}{p{\textwidth}}
+ \hline \hline
  $P_{admit}$ $\leftarrow$ \textbf{join}(mID) \\
  \hline
  Client joins a curated model. Client provides modelID; TorMentor returns
  a SHA-256 admission hash puzzle $P_{admit}$.                          
  \\
- \hline\hline
+ \hline \hline
  conn, $M_t$ $\leftarrow$ \textbf{solve}(mID, $S_{admit}$, minCli, schema) \\
  \hline
  Client finds the solution $S_{admit}$ to $P_{admit}$ and joins. Client
  provides modelID, solution to puzzle, min number of clients and its
  dataset schema; TorMentor returns a connection and global model state.
  \\
- \hline\hline
+ \hline \hline
  $M_{g,t+1}$, $P_{i,t+1}$ $\leftarrow$ \textbf{gradientUpdate}(mId, $S_
  {i,t}$, $\Delta_{i,t}$) \\
  \hline
@@ -34,9 +40,9 @@
  gradient update $\Delta_{i,t}$ at iteration $t$; TorMentor returns new
  global model state $M_{g,t+1}$, and the next SHA-256 puzzle $P_
  {i,t+1}$. \\
+ \hline
 \end{tabular} 
-\caption{TorMentor API. The curate call (top row) is the only curator
-  API call. The bottom three calls are for clients.\label{tab:API} }
+\caption{TorMentor Client API.\label{tab:CliAPI} }
 \end{table}
 
 \begin{figure}[h]
@@ -59,7 +65,9 @@ objective in a reasonable amount of time, (2) provide both anonymity
 and data privacy guarantees to clients and curators, and (3) flexibly
 support client-specific privacy requirements.
 
-\textbf{Design overview.} The broker handles all communication between
+\section{Design overview} 
+
+The broker handles all communication between
 clients and the curator, and acts as the coordinator in an untrusted
 collaborative learning setting. Each TorMentor broker is deployed as a
 Tor hidden service with a unique and known \textit{.onion}
@@ -76,8 +84,9 @@ parameters of the global model. The validator is a novel addition in
 our work that observes and validates the values of gradient updates
 sent by clients to the aggregator.
 
-Next, we review the TorMentor API in Table~\ref{tab:API} and the
-training process illustrated in Figure~\ref{fig:protocol}. We then
+Next, we review the TorMentor curator and client \ac{API} in 
+Tables~\ref{tab:CurAPI} and~\ref{tab:CliAPI}. We also review the
+training process illustrated in Figure~\ref{fig:protocol}, and finally
 detail how TorMentor defends against adversarial clients and curators.
 
 \section{Curator API}
@@ -132,6 +141,7 @@ machine learning in a setting with heterogeneous user-controlled
 privacy goals.}
 
 \section{Training process}
+\label{sec:training}
 
 Training in TorMentor (Algorithm~\ref{alg:training}) is performed in a
 fashion similar to that of the parameter server~\cite{Li:2014}:

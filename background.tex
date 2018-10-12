@@ -13,7 +13,7 @@ predict discrete binary outputs; a higher loss results in more
 prediction errors. Given a set of training data and a proposed model, ML
 algorithms \emph{train}, or iteratively find an optimal set of
 parameters, for the given training set. One approach is to use
-stochastic gradient descent (SGD)~\cite{Bottou:2010}, an iterative
+\ac{SGD}~\cite{Bottou:2010}, an iterative
 algorithm which samples a batch of training examples of size $b$, uses
 them to compute gradients on the parameters of the current model, and
 takes gradient steps in the corresponding gradient direction. The
@@ -155,10 +155,10 @@ our setting.\\
 Clients are still at privacy risk when sending model updates directly
 to an untrusted broker, so we add an additional layer of indirection in
 our work. Onion routing protocols are a modern method for providing
-anonymity in a distributed P2P setting. When communicating with a
-target node, clients route traffic through a randomly selected set of
-relay nodes in the network, which obfuscates the source and destination
-nodes for each message.
+anonymity in a distributed \ac{P2P} setting. When
+communicating with a target node, clients route traffic through a
+randomly selected set of relay nodes in the network, which obfuscates
+the source and destination nodes for each message.
 
 Our work supports the use of any modern implementation for providing
 anonymous communication. We select the Tor 

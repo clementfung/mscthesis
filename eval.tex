@@ -51,7 +51,7 @@ curator, the broker is a commercial trusted service provider, and
 clients are the credit card companies with private datasets.
 
 To evaluate this use-case we used a credit card
-dataset~\cite{Yeh:2009} from the UCI machine learning
+dataset~\cite{Yeh:2009} from the \ac{UCI} machine learning
 repository~\cite{Lichman:2013}. The dataset has 30,000 examples and
 24 features. The features represent information about customers,
 including their age, gender and education level, along with
@@ -68,19 +68,19 @@ curator-provided validation set. Training error, the primary metric
 used in evaluation, is calculated as the error when classifying the
 entire 70\% training shard. In brokered learning, no single client
 would have access to the entire training dataset, so this serves as a
-hypothetical metric.
+hypothetical metric. \\
 
-\textbf{Wide-area deployment on Azure.}  
+\noindent \textbf{Wide-area deployment on Azure.}  
 We evaluated TorMentor at scale by deploying a geo-distributed set of
-25 Azure VMs, each running in a separate data center, spanning 6
-continents. Each VM was deployed using Azure's
-default Ubuntu 16.06 resource allocation. Each VM was provisioned with
-a single core Intel Xeon E5-2673 v3 2.40GHz CPU, and 4 GB of RAM.
+25 Azure virtual machines, each running in a separate data center, spanning 6
+continents. Each \ac{VM} was deployed using Azure's
+default Ubuntu 16.06 resource allocation. Each \ac{VM} was provisioned with
+a single core Intel Xeon E5-2673 v3 2.40GHz \ac{CPU}, and 4 gigabytes of \ac{RAM}.
 Tor's default \texttt{stretch} distribution was installed on each client.
 We deployed the broker at our home institution as a hidden service on
 Tor. The median ping latency (without using Tor) from the client
-VMs to the broker was 133.9ms with a standard deviation (SD) of 61.9ms.
-With Tor, the median ping latency increased to 715.9ms with a SD of
+VMs to the broker was 133.9ms with a \ac{SD} of 61.9ms.
+With Tor, the median ping latency increased to 715.9ms with a \ac{SD} of
 181.8ms.
 
 In our wide-area experiments we evenly distribute a varying number of
@@ -137,7 +137,7 @@ clients.
 
 
 We also compared the convergence time on TorMentor with a baseline
-WAN parameter server. For the WAN parameter server we used the same
+\ac{WAN} parameter server. For the WAN parameter server we used the same
 clients deployment, but bypassed Tor, thereby sacrificing anonymity.
 
 The results in Table~\ref{tab:latency} show that on average, the

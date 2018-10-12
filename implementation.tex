@@ -4,14 +4,17 @@
 \label{sec:impl}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We implemented a TorMentor prototype in 600 LOC in Python 2.7 and
-1,500 LOC in Go 1.8. All the communication primitives are developed in
-Go, while the vector computation and ML are in Python. We implement
+We implemented a TorMentor prototype in 600 \ac{LOC}
+in Python 2.7 and 1,500 LOC in Go 1.8. All the communication
+primitives are developed in Go, while the vector computation and ML
+are in Python. To facilitate communication between Go and Python, we
+use \emph{go-python}~\cite{gopython}, a library that provides
+communication bindings between the two languages. We implement
 differentially-private SGD~\cite{Song:2013} in Numpy 1.12. For our
 noise function, we use a multivariate isotropic Laplace distribution.
 As a performance operation, we draw random samples from this
-distribution prior to training by using \emph{emcee}, an MIT licensed
-Monte Carlo (MCMC) ensemble sampler~\cite{mcmc:2013}.
+distribution prior to training by using \emph{emcee}, a \ac{MIT}
+licensed \ac{MCMC} ensemble sampler~\cite{mcmc:2013}.
 
 In our evaluation we deploy the TorMentor curator and clients on
 Azure by using bash scripts consisting of 371 LOC. These bootstrap VMs

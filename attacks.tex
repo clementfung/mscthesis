@@ -28,42 +28,43 @@ the data of users.
 Clients and curators do not attack the broker itself, rather they aim
 to attack other curators, other clients, or the outcome of the learning
 process. Brokers are also untrusted in the system: the client and
-curator APIs protect them from potential broker attacks. 
+curator \ac{API} protects users from potential broker attacks. 
 Figure~\ref{fig:threatmodel} overviews TorMentor's threat model with
-attacks/defenses and who can attack who and how.
+attacks/defenses and who can attack who and how. \\
 
 %% : clients can be attacked by curators or other clients
 %% through inversion attacks, curators can be attacked by clients through
 %% poisoning attacks, and curators and clients can use sybils to attack
 %% other users.
 
-\textbf{Deanonymization.} For anonymous communication to and from the
-broker we assume a threat model similar to Tor~\cite{Dingledine:2004}:
-an adversary has the ability to observe and control some, but
-not all of the network. Adversaries may attempt to observe Tor traffic
-as a client or as a broker in the network~\cite{Murdoch:2005,
-Evans:2009, Johnson:2013}. Adversaries can also influence traffic
-within Tor through their own onion router nodes, which do not
-necessarily need to be active TorMentor clients. 
+\noindent \textbf{Deanonymization.} For anonymous communication to and
+from the broker we assume a threat model similar to 
+Tor~\cite{Dingledine:2004}: an adversary has the ability to observe
+and control some, but not all of the network. Adversaries may attempt
+to observe Tor traffic as a client or as a broker in the 
+network~\cite{Murdoch:2005, Evans:2009, Johnson:2013}. Adversaries can
+also influence traffic within Tor through their own onion router
+nodes, which do not necessarily need to be active TorMentor clients.
+\\
 
-\textbf{Poisoning attacks.} In our threat model, poisoning attacks are
-performed by clients against shared models. After a curator defines a
-model, adversarial clients can use the defined learning objective to
-craft adversarial samples that oppose the objective. We assume that
-adversaries generate these adversarial samples using a common strategy
-such as label flipping~\cite{Biggio:2012}, and join the training
-process and poison the model by influencing its prediction
-probabilities.
+\noindent \textbf{Poisoning attacks.} In our threat model, poisoning
+attacks are performed by clients against shared models. After a
+curator defines a model, adversarial clients can use the defined
+learning objective to craft adversarial samples that oppose the
+objective. We assume that adversaries generate these adversarial
+samples using a common strategy such as label 
+flipping~\cite{Biggio:2012}, and join the training process and poison
+the model by influencing its prediction probabilities. \\
 
-\textbf{Inversion attacks.} We assume that adversaries can target a
-specific client victim who they know is using the system. Inversion
-attacks can be executed from a variety of points: the adversary may be
-administering the broker, the adversary may curate a model that the
-victim joins, or the adversary joins model training as a client,
-knowing that the victim has also joined. Although the broker does not
-expose model confidence scores in the model prediction API, which are a
-key piece of information for performing inversion attacks in a
-black-box setting~\cite{Fredrikson:2015}, our threat model grants
+\noindent \textbf{Inversion attacks.} We assume that adversaries can
+target a specific client victim who they know is using the system.
+Inversion attacks can be executed from a variety of points: the
+adversary may be administering the broker, the adversary may curate a
+model that the victim joins, or the adversary joins model training as
+a client, knowing that the victim has also joined. Although the broker
+does not expose model confidence scores in the model prediction API,
+which are a key piece of information for performing inversion attacks
+in a black-box setting~\cite{Fredrikson:2015}, our threat model grants
 adversaries white-box access to the model internals, which is more
 powerful than a traditional model inversion attack. 
 
@@ -73,14 +74,14 @@ observing changes to the global model and reconstructing a copy of the
 victim's local model. This attack is similar to a model stealing
 attack~\cite{Tramer:2016}: after stealing an accurate approximation of
 a victim's local model, an adversary can mount an inversion attack on
-the approximation to reconstruct the victim's training examples.
+the approximation to reconstruct the victim's training examples. \\
 
-\textbf{Sybil attacks.}  Since clients and curators join the system
-anonymously, they can generate sybils, or multiple colluding virtual
-clients, to attacks the system~\cite{Douceur:2002}. In federated
-learning, all users are given an equal stake in the system, and
-thus sybils make poisoning and inversion attacks linearly easier to
-perform.
+\noindent \textbf{Sybil attacks.}  Since clients and curators join the
+system anonymously, they can generate sybils, or multiple colluding
+virtual clients, to attacks the system~\cite{Douceur:2002}. In
+federated learning, all users are given an equal stake in the system,
+and thus sybils make poisoning and inversion attacks linearly easier
+to perform.
 
 \section{Security guarantees} 
 
