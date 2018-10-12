@@ -1,43 +1,45 @@
 %!TEX root = main.tex
 
-\begin{table*}[t]
-\begin{tabular}{ p{7cm} p{10cm} }
+\begin{table}[h]
+\begin{tabular}{p{\textwidth}}
  \hline
 % return-val $\leftarrow$ call(args)} 
- \textbf{API call}                                                 & 
- \textbf{Description}                                                                 \\
+ %\textbf{API call}                                                 & 
+ %\textbf{Description}                                                                 \\
+ address $\leftarrow$ \textbf{curate}(mID, maxCli, minCli, validSet) \\
  \hline
- address $\leftarrow$ \textbf{curate}(mID, maxCli, minCli, validSet) & 
  Curate a new model. Curator provides modelID,  
  client count range, validation set. TorMentor returns a hidden
  service address for a newly specified broker. \\
  \hline\hline
- $P_{admit}$ $\leftarrow$ \textbf{join}(mID)                         
- &
+ \hline\hline
+ $P_{admit}$ $\leftarrow$ \textbf{join}(mID) \\
+ \hline
  Client joins a curated model. Client provides modelID; TorMentor returns
  a SHA-256 admission hash puzzle $P_{admit}$.                          
  \\
+ \hline\hline
+ conn, $M_t$ $\leftarrow$ \textbf{solve}(mID, $S_{admit}$, minCli, schema) \\
  \hline
- conn, $M_t$ $\leftarrow$ \textbf{solve}(mID, $S_{admit}$, minCli, schema) & 
  Client finds the solution $S_{admit}$ to $P_{admit}$ and joins. Client
  provides modelID, solution to puzzle, min number of clients and its
  dataset schema; TorMentor returns a connection and global model state.
  \\
- \hline
+ \hline\hline
  $M_{g,t+1}$, $P_{i,t+1}$ $\leftarrow$ \textbf{gradientUpdate}(mId, $S_
- {i,t}$, $\Delta_{i,t}$) & 
+ {i,t}$, $\Delta_{i,t}$) \\
+ \hline
  Client pushes a local model update to the global model state. Client $i$
  provides modelID, solution to previous SHA-256 puzzle $S_{i,t}$ and
  gradient update $\Delta_{i,t}$ at iteration $t$; TorMentor returns new
  global model state $M_{g,t+1}$, and the next SHA-256 puzzle $P_
- {i,t+1}$.          
- \\
+ {i,t+1}$. \\
 \end{tabular} 
 \caption{TorMentor API. The curate call (top row) is the only curator
   API call. The bottom three calls are for clients.\label{tab:API} }
-\end{table*}
+\end{table}
 
-\begin{figure}[t]
+\begin{figure}[h]
   \centering
   \includegraphics[width=.9\linewidth]{fig/tormentor-protocol.pdf}
   \caption{Overview of the TorMentor protocol between
@@ -196,7 +198,7 @@ scenario. Figure~\ref{fig:inversion-timespace} shows the proposed ideal
 situation for an attacker performing an inversion attack: a two client
 TorMentor system, one of whom is the adversary.
 
-\begin{figure}[t]
+\begin{figure}[h]
   \centering
   \includegraphics[width=.8\linewidth]{fig/inversionattack.pdf}
   \caption{One iteration in an inversion attack in which an attacker
@@ -292,7 +294,7 @@ difficulty of this puzzle is client- and iteration-specific, making it
 more expensive for malicious clients to poison the model and decreasing
 their influence relative to honest clients. 
 
-\begin{algorithm}[t]
+\begin{algorithm}[h]
   \KwData{Stream of gradient updates from each client $i$, over $t$
   iterations $\Delta_{i,t}$}
   \KwResult{Reject a client if their updates oppose the defined
