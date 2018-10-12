@@ -1,12 +1,4 @@
 %!TEX root = main.tex
-\begin{figure*}[t]
-	\includegraphics[width=\textwidth]{fig/giantplot}
-	\caption{Effects of differential privacy and batch size on training
-		loss over time. As $\varepsilon$ and $b$ decrease, model convergence
-		is slower and may not be guaranteed.}
-	\label{fig:bs50}
-\end{figure*}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Evaluation}
 \label{sec:eval}
@@ -94,6 +86,14 @@ proceeds to participate in asynchronous model training.
 \section{Model convergence}
 \label{eval:diffpriv}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[t]
+	\includegraphics[width=\textwidth]{fig/giantplot}
+	\caption{Effects of differential privacy and batch size on training
+		loss over time. As $\varepsilon$ and $b$ decrease, model convergence
+		is slower and may not be guaranteed.}
+	\label{fig:bs50}
+\end{figure}
 
 We evaluate the effect of the privacy parameter $\varepsilon$ and the
 batch size $b$ when performing learning over TorMentor. 

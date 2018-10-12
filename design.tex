@@ -1,6 +1,42 @@
 %!TEX root = main.tex
 
-\begin{table}[h]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{TorMentor Design}
+\label{sec:design}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+TorMentor design has three goals: (1) meet the defined learning
+objective in a reasonable amount of time, (2) provide both anonymity
+and data privacy guarantees to clients and curators, and (3) flexibly
+support client-specific privacy requirements.
+
+\section{Design overview}
+
+The broker handles all communication between
+clients and the curator, and acts as the coordinator in an untrusted
+collaborative learning setting. Each TorMentor broker is deployed as a
+Tor hidden service with a unique and known \textit{.onion}
+domain. Several clients may join a model once a curator defines it,
+with requirements for joining specified by both the curator and the
+clients. Each broker and therefore each model is associated with a pool
+of clients among whom the learning procedure takes place (see 
+Figure~\ref{fig:sysdiagram}).
+
+Each broker runs a separate \emph{aggregator} process and 
+\emph{validator} process. The aggregator serves the same purpose as a
+parameter server~\cite{Li:2014}: storing and distributing the
+parameters of the global model. The validator is a novel addition in
+our work that observes and validates the values of gradient updates
+sent by clients to the aggregator.
+
+Next, we review the TorMentor curator and client \ac{API} in 
+Tables~\ref{tab:CurAPI} and~\ref{tab:CliAPI}. We also review the
+training process illustrated in Figure~\ref{fig:protocol}, and finally
+detail how TorMentor defends against adversarial clients and curators.
+
+\section{Curator API}
+
+\begin{table}[t]
 \begin{tabular}{p{\textwidth}}
 % return-val $\leftarrow$ call(args)} 
  %\textbf{API call}                                                 & 
@@ -16,7 +52,7 @@
 \caption{TorMentor Curator API.\label{tab:CurAPI} }
 \end{table}
 
-\begin{table}[h]
+\begin{table}[t]
 \begin{tabular}{p{\textwidth}}
  \hline \hline
  $P_{admit}$ $\leftarrow$ \textbf{join}(mID) \\
@@ -45,53 +81,8 @@
 \caption{TorMentor Client API.\label{tab:CliAPI} }
 \end{table}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.9\linewidth]{fig/tormentor-protocol.pdf}
-  \caption{Overview of the TorMentor protocol between
-    curator/broker/client.
-    }
-  \label{fig:protocol}
-\end{figure}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{TorMentor Design}
-\label{sec:design}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-TorMentor design has three goals: (1) meet the defined learning
-objective in a reasonable amount of time, (2) provide both anonymity
-and data privacy guarantees to clients and curators, and (3) flexibly
-support client-specific privacy requirements.
-
-\section{Design overview} 
-
-The broker handles all communication between
-clients and the curator, and acts as the coordinator in an untrusted
-collaborative learning setting. Each TorMentor broker is deployed as a
-Tor hidden service with a unique and known \textit{.onion}
-domain. Several clients may join a model once a curator defines it,
-with requirements for joining specified by both the curator and the
-clients. Each broker and therefore each model is associated with a pool
-of clients among whom the learning procedure takes place (see 
-Figure~\ref{fig:sysdiagram}).
-
-Each broker runs a separate \emph{aggregator} process and 
-\emph{validator} process. The aggregator serves the same purpose as a
-parameter server~\cite{Li:2014}: storing and distributing the
-parameters of the global model. The validator is a novel addition in
-our work that observes and validates the values of gradient updates
-sent by clients to the aggregator.
-
-Next, we review the TorMentor curator and client \ac{API} in 
-Tables~\ref{tab:CurAPI} and~\ref{tab:CliAPI}. We also review the
-training process illustrated in Figure~\ref{fig:protocol}, and finally
-detail how TorMentor defends against adversarial clients and curators.
-
-\section{Curator API}
-
-The curator uses the \textbf{curate} call to bootstrap a new model by defining
+Table~\ref{tab:CurAPI} shows the curator API in TorMentor. The curator
+uses the \textbf{curate} call to bootstrap a new model by defining
 a \emph{common learning objective}: the model type, the desired
 training data schema and a validation dataset. These are critical to
 perform ML successfully (even in a local setting). We therefore expect
@@ -111,6 +102,7 @@ clients contributing to the model.
 
 \section{Client API} 
 
+Table~\ref{tab:CliAPI} shows the client API in TorMentor. 
 A client uses the \textbf{join} call to join a curated model. A
 client's data is validated against the objective when joining. Our
 prototype only checks that the specified number of features matches
@@ -143,7 +135,17 @@ privacy goals.}
 \section{Training process}
 \label{sec:training}
 
-Training in TorMentor (Algorithm~\ref{alg:training}) is performed in a
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.9\linewidth]{fig/tormentor-protocol.pdf}
+  \caption{Overview of the TorMentor protocol between
+    curator/broker/client.
+    }
+  \label{fig:protocol}
+\end{figure}
+
+Training in TorMentor (Figure~\ref{fig:protocol} and 
+Algorithm~\ref{alg:training}) is performed in a
 fashion similar to that of the parameter server~\cite{Li:2014}:
 each client pulls the global model, locally computes a gradient step,
 and applies the update to the global model. TorMentor users the
@@ -173,7 +175,7 @@ Section~\ref{sec:eval}).
 % also possible if operating in a setting that does not expect failures
 % or adversaries.
 
-\begin{algorithm}
+\begin{algorithm}[t]
   \KwData{Training data $x,y$; batch size $b$; privacy parameter
   $\varepsilon$}
   \KwResult{Returns a single gradient update on the model
@@ -202,13 +204,7 @@ halt and no work will be wasted.
 
 \section{Defending against inversion attacks}
 
-Although a direct inversion attack in federated learning has not
-been realized yet, we envision a novel potential attack in this
-scenario. Figure~\ref{fig:inversion-timespace} shows the proposed ideal
-situation for an attacker performing an inversion attack: a two client
-TorMentor system, one of whom is the adversary.
-
-\begin{figure}[h]
+\begin{figure}[t]
   \centering
   \includegraphics[width=.8\linewidth]{fig/inversionattack.pdf}
   \caption{One iteration in an inversion attack in which an attacker
@@ -218,6 +214,12 @@ TorMentor system, one of whom is the adversary.
     the victim's data.}
   \label{fig:inversion-timespace}
 \end{figure}
+
+Although a direct inversion attack in federated learning has not
+been realized yet, we envision a novel potential attack in this
+scenario. Figure~\ref{fig:inversion-timespace} shows the proposed ideal
+situation for an attacker performing an inversion attack: a two client
+TorMentor system, one of whom is the adversary.
 
 In this scenario the victim $V$ and attacker $A$ alternate in sending
 gradient updates to the broker. Since the global model parameters are
@@ -267,6 +269,33 @@ the adversary needs to create $k-1$ sybil clients.
 \section{Defending against poisoning attacks}
 \label{validator}
 
+\begin{algorithm}[t]
+  \KwData{Stream of gradient updates from each client $i$, over $t$
+  iterations $\Delta_{i,t}$}
+  \KwResult{Reject a client if their updates oppose the defined
+  learning objective}
+  \While{IsTraining} {
+    Draw Bernoulli value $v$\;
+    \If{$v > \mathit{VALIDATION\mbox{\tt\string_}RATE}$} {
+      Set current model $M_t$ to be snapshot model $M_s$\;
+      Wait for client responses\;
+    }
+    \If{Client $c$ contacts TorMentor} {
+      Send $M_s$ instead of $M_t$\;
+      Save response $\Delta_{c,s}$
+    }
+    \If{All clients responded} {
+       Find RONI $r_c$:
+       $r_c = err(M_s, X_{val}) - err(M_s + \Delta_{c,s}, X_{val})$\; 
+       $total_c = total_c + r_c$\;
+      \If{$total_c > \mathit{THRESHOLD}$} {
+        penalize $c$\;
+      }
+    }
+  }
+  \caption{RONI validation algorithm. \label{alg:roni}}
+\end{algorithm}
+
 In adding the validator process, we propose an \emph{active parameter
 server} alternative to the assumed passive parameter server in current
 attacks~\cite{Hitaj:2017}. The parameter server validates each client's
@@ -303,33 +332,6 @@ one, increasing the difficulty of the puzzle for that client. The
 difficulty of this puzzle is client- and iteration-specific, making it
 more expensive for malicious clients to poison the model and decreasing
 their influence relative to honest clients. 
-
-\begin{algorithm}[h]
-  \KwData{Stream of gradient updates from each client $i$, over $t$
-  iterations $\Delta_{i,t}$}
-  \KwResult{Reject a client if their updates oppose the defined
-  learning objective}
-  \While{IsTraining} {
-    Draw Bernoulli value $v$\;
-    \If{$v > \mathit{VALIDATION\mbox{\tt\string_}RATE}$} {
-      Set current model $M_t$ to be snapshot model $M_s$\;
-      Wait for client responses\;
-    }
-    \If{Client $c$ contacts TorMentor} {
-      Send $M_s$ instead of $M_t$\;
-      Save response $\Delta_{c,s}$
-    }
-    \If{All clients responded} {
-       Find RONI $r_c$:
-       $r_c = err(M_s, X_{val}) - err(M_s + \Delta_{c,s}, X_{val})$\; 
-       $total_c = total_c + r_c$\;
-      \If{$total_c > \mathit{THRESHOLD}$} {
-        penalize $c$\;
-      }
-    }
-  }
-  \caption{RONI validation algorithm. \label{alg:roni}}
-\end{algorithm}
 
 When the rate of validation is increased, the broker discovers
 poisoning clients more quickly, but with a performance overhead. When
