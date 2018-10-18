@@ -106,9 +106,10 @@ the learning process to clients out of band, externally to TorMentor.}.
 and specify the criteria for their participation. Instead of fully
 trusting the curator as they would in federated learning, clients
 communicate with an honest-but-curious broker. The broker is trusted
-only with coordinating the learning process, and does not learn the
-identity nor data of any client. This threat model is similar to what
-was used in the secure aggregation protocol for federated 
+with coordinating the learning process and does not initiate actions.
+However, the broker is curious and will examine client data and
+identities if possible. This threat model is similar to what was used
+in the secure aggregation protocol for federated 
 learning~\cite{Bonawitz:2017}.
 
 Brokered learning allows these clients to jointly contribute to a

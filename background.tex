@@ -28,11 +28,11 @@ of models, including deep learning~\cite{Song:2013}.\\
 %
 To support larger models and datasets, ML training has been
 parallelized using a parameter server architecture~\cite{Li:2014}: the
-global model parameters are partitioned and stored on a parameter
-server. At each iteration, client machines pull the 
-parameters, compute and apply one or more iterations, and push their
-updates back to the server. This can be done
-with a synchronous or asynchronous protocol~\cite{Hsieh:2017,
+global model parameters are partitioned and stored on multiple
+parameter server machines. At each iteration, client machines pull the 
+parameters from server machines, compute and apply one or more
+iterations, and push their updates back to the server. This can be
+done with a synchronous or asynchronous protocol~\cite{Hsieh:2017,
 Recht:2011}, both of which are supported in our work.
 
 %% Through the parameter server architecture, computation is highly

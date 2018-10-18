@@ -98,11 +98,13 @@ TorMentor exposes a small, restrictive API to limit a user's influence
 on the system. TorMentor alleviates the risk of poisoning attacks and
 inversion attacks by allowing clients to specify $k$, the minimum
 number of clients required for training. When a client joins the
-system, they are able to specify the number of other clients required
-in the system, which TorMentor guarantees will be honored. Clients
-also locally use differential privacy to further protect their privacy.
-Both parameters are defined by the client, guaranteeing that clients (and not
-the curator) controls this accuracy-privacy tradeoff.
+system, they specify the number of other clients required in the
+system, which TorMentor guarantees will be honored: in the
+case of different $k$ parameters, training only begins when this
+condition is satisfied for all clients. Clients also locally use
+differential privacy to further protect their privacy. Both parameters
+are defined by the client, guaranteeing that clients (and not the
+curator) controls this accuracy-privacy tradeoff.
 
 %% The training process in
 %% brokered learning is the stage in which the most information is

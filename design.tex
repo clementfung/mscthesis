@@ -103,7 +103,10 @@ clients contributing to the model.
 \section{Client API} 
 
 Table~\ref{tab:CliAPI} shows the client API in TorMentor. 
-A client uses the \textbf{join} call to join a curated model. A
+A client uses the \textbf{join} call to join a curated model
+\footnote{We assume that the client is able to learn the
+curator-provided modelID out of band. This may be through a
+third-party system or directly through another anonymous service.}. A
 client's data is validated against the objective when joining. Our
 prototype only checks that the specified number of features matches
 those of the client, but more advanced automatic schema validation
@@ -148,7 +151,7 @@ Training in TorMentor (Figure~\ref{fig:protocol} and
 Algorithm~\ref{alg:training}) is performed in a
 fashion similar to that of the parameter server~\cite{Li:2014}:
 each client pulls the global model, locally computes a gradient step,
-and applies the update to the global model. TorMentor users the
+and applies the update to the global model. TorMentor uses the
 differentially private SGD~\cite{Song:2013} method, which allows
 clients to select their own privacy parameter $\varepsilon$ and batch
 size $b$. We assume that clients understand how to properly define

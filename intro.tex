@@ -35,9 +35,9 @@ privacy~\cite{Calandrino:2011}. General privacy-preserving computation
 models exist, but they rely on substantial amounts of additional
 infrastructure. These include homomorphically encrypted secure
 aggregation~\cite{Bonawitz:2017}, secure multi-party 
-computation~\cite{Mohassel:2017}, or trusted \ac{SGX}~\cite{Ohrimenko:2016}, 
-all of which are infeasible for
-individuals and small organizations to deploy.
+computation~\cite{Mohassel:2017}, or trusted 
+\ac{SGX}~\cite{Ohrimenko:2016}, all of which are infeasible for
+individuals and small organizations to deploy. 
 
 Today there is no accessible solution to collaborative multi-party
 machine learning that maintains privacy and anonymity in an untrusted
@@ -54,10 +54,13 @@ process.
 Clients and curators never directly communicate: they are protected
 from each other by a broker that is only used to coordinate the
 learning task. The broker is administered by an honest-but-curious
-neutral party, detects and rejects anomalous behavior, and terminates
-when the learning objective is met. Our system design supports privacy
-and anonymity by building on accessible public infrastructure to
-minimize the cost of setting up and maintaining a broker.
+neutral party, meaning that it does not initiate actions and follows
+the prescribed learning process. The broker detects and rejects
+anomalous behavior and terminates the learning processes as
+instructed, but is curious and will examine client data if possible.
+Our system design supports privacy and anonymity by building on
+accessible public infrastructure to minimize the cost of setting up
+and maintaining a broker. 
 
 We realize the brokered learning setting by designing, implementing,
 and evaluating \emph{TorMentor}, a system which creates \emph{brokers}
